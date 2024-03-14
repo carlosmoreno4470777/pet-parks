@@ -4,9 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
+import pet.park.entity.Amenity;
 import pet.park.entity.Contributor;
 import pet.park.entity.GeoLocation;
+import pet.park.entity.PetPark;
 
 /**
  * This class is a Data Transfer Object (DTO). It is used to shuttle data from
@@ -33,9 +36,11 @@ import pet.park.entity.GeoLocation;
  *
  */
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
 public class ContributorData {
-  private Long contributorId;
+
+
+private Long contributorId;
   private String contributorName;
   private String contributorEmail;
   private Set<PetParkResponse> petParks = new HashSet<>();
@@ -47,7 +52,7 @@ public class ContributorData {
    * to the way that JPA manages relationships. The ContributorData class has
    * the same variables but without the recursion.
    */
- /*
+
   public ContributorData(Contributor contributor) {
     contributorId = contributor.getContributorId();
     contributorName = contributor.getContributorName();
@@ -56,8 +61,7 @@ public class ContributorData {
     for(PetPark petPark : contributor.getPetParks()) {
       petParks.add(new PetParkResponse(petPark));
     }
-  }
-*/ 
+  } 
   /**
    * This inner class contains the same data as the PetPark entity but without
    * the recursion. As such it is Jackson friendly.
@@ -65,9 +69,8 @@ public class ContributorData {
    * @author Promineo
    *
    */
-//  @Data
-//  @NoArgsConstructor
-  @Value
+  	@Data
+  	@NoArgsConstructor
   static class PetParkResponse {
     private Long petParkId;
     private String parkName;
@@ -84,15 +87,15 @@ public class ContributorData {
      * 
      * @param petPark
      */
-	/*
-	 * PetParkResponse(PetPark petPark) { petParkId = petPark.getPetParkId();
-	 * parkName = petPark.getParkName(); directions = petPark.getDirections();
-	 * stateOrProvince = petPark.getStateOrProvince(); country =
-	 * petPark.getCountry(); geoLocation = new
-	 * GeoLocation(petPark.getGeoLocation());
-	 * 
-	 * for(Amenity amenity : petPark.getAmenities()) {
-	 * amenities.add(amenity.getAmenity()); } }
-	 */
+	
+	  PetParkResponse(PetPark petPark) { petParkId = petPark.getPetParkId();
+	  parkName = petPark.getParkName(); directions = petPark.getDirections();
+	  stateOrProvince = petPark.getStateOrProvince(); country =
+	  petPark.getCountry(); geoLocation = new
+	  GeoLocation(petPark.getGeoLocation());
+	  
+	  for(Amenity amenity : petPark.getAmenities()) {
+	  amenities.add(amenity.getAmenity()); } }
+	 
   }
 }

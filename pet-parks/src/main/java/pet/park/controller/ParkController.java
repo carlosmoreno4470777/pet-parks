@@ -88,6 +88,26 @@ public class ParkController {
       return parkService.savePetPark(contributorId, petParkData);
     }
     
+    @PutMapping("/contributor/{contributorId}/park/{parkId}")
+    public PetParkData updatePetPark(@PathVariable Long contributorId,
+        @PathVariable Long parkId, @RequestBody PetParkData petParkData) {
+
+      petParkData.setPetParkId(parkId);
+
+      log.info("Creating park {} for contributor with ID={}", petParkData,
+          contributorId);
+
+      return parkService.savePetPark(contributorId, petParkData);
+    }
+
+    @GetMapping("/contributor/{contributorId}/park/{parkId}")
+    public PetParkData retrievePetParkById(@PathVariable Long contributorId,
+        @PathVariable Long parkId) {
+      log.info("Retrieving pet park with ID={} for contributor with ID={}",
+          parkId, contributorId);
+
+      return parkService.retrievePetParkById(contributorId, parkId);
+    }    
     
     
 }// end of class ParkController

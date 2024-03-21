@@ -7,10 +7,10 @@
     "latitude": "44.50045",
     "longitude": "-111.25493"
   },
-  "amenities": {
+  "amenities": [
     "dog friendly",
     "chicken friendly",
     "hot dog stand",
     "wifi"
-  }
+  ]
 }

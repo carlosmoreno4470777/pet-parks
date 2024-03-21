@@ -175,4 +175,24 @@ public class ParkService {
 				.orElseThrow(() -> new NoSuchElementException("Pet park with ID=" + petParkId + " does not exist."));
 	}
 
+	  @Transactional(readOnly = true)
+	  public PetParkData retrievePetParkById(Long contributorId, Long parkId) {
+	    /* Check that the contributor ID exists or throws an exception. */
+	    findContributorById(contributorId);
+
+	    /* Check that the pet park ID exists or throws an exception. */
+	    PetPark petPark = findPetParkById(parkId);
+
+	    /*
+	     * Throws an exception if the contributor ID of the pet park contributor
+	     * does not match the expected contributor ID.
+	     */
+	    if(petPark.getContributor().getContributorId() != contributorId) {
+	      throw new IllegalStateException("Pet park with ID=" + parkId
+	          + " is not owned by contributor with ID=" + contributorId);
+	    }
+
+	    return new PetParkData(petPark);
+	  }
+
 }

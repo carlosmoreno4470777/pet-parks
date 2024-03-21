@@ -23,8 +23,7 @@ public class GlobalControllerErrorHandler {
 	private enum LogStatus {
 		STACK_TRACE, MESSAGE_ONLY
 	}
-	
-	
+
 	@Data
 	@NoArgsConstructor
 	private class ExceptionMessage {
@@ -34,16 +33,24 @@ public class GlobalControllerErrorHandler {
 		private String timestamp;
 		private String uri;
 	}
-	
+
+	@ExceptionHandler(IllegalStateException.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ExceptionMessage handleIllegalStateException(IllegalStateException ex, WebRequest webRequest) {
+		return buildExceptionMessage(ex, HttpStatus.BAD_REQUEST, webRequest, LogStatus.MESSAGE_ONLY);
+
+	}
+
 	/*
 	 * Exception handler for UnsupportedOperationException
 	 */
 	@ExceptionHandler(UnsupportedOperationException.class)
 	@ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
-	public ExceptionMessage handleUnsupportedOperationException(UnsupportedOperationException ex, WebRequest webRequest) {
+	public ExceptionMessage handleUnsupportedOperationException(UnsupportedOperationException ex,
+			WebRequest webRequest) {
 		return buildExceptionMessage(ex, HttpStatus.METHOD_NOT_ALLOWED, webRequest, LogStatus.MESSAGE_ONLY);
 	}
-	
+
 	/*
 	 * @ExceptionHandler(UnsupportedOperationException.class)
 	 * 
@@ -55,19 +62,17 @@ public class GlobalControllerErrorHandler {
 	 * 
 	 * }
 	 */
-	
+
 	/*
 	 * Exception handler for all general Exceptions
 	 */
-	
-	  @ExceptionHandler(Exception.class)  
-	  @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR) 
-	  public ExceptionMessage handleNoSuchElementException(Exception e, WebRequest webRequest) { 
-		  return buildExceptionMessage(e,
-	  HttpStatus.INTERNAL_SERVER_ERROR, webRequest, LogStatus.STACK_TRACE); 
-	  }
-	 
-	
+
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ExceptionMessage handleNoSuchElementException(Exception e, WebRequest webRequest) {
+		return buildExceptionMessage(e, HttpStatus.INTERNAL_SERVER_ERROR, webRequest, LogStatus.STACK_TRACE);
+	}
+
 	/*
 	 * @ExceptionHandler(NoSuchElementException.class)
 	 * 
@@ -76,8 +81,7 @@ public class GlobalControllerErrorHandler {
 	 * buildExceptionMessage(ex, HttpStatus.NOT_FOUND, webRequest,
 	 * LogStatus.MESSAGE_ONLY); }
 	 */
-	
-	
+
 	/*
 	 * Exception handler for DuplicateKeyException
 	 */
@@ -86,7 +90,6 @@ public class GlobalControllerErrorHandler {
 	public ExceptionMessage handleDuplicateKeyException(DuplicateKeyException e, WebRequest webRequest) {
 		return buildExceptionMessage(e, HttpStatus.CONFLICT, webRequest, LogStatus.MESSAGE_ONLY);
 	}
-	
 
 	/*
 	 * Exception handler for UnsupportedOperationException
@@ -98,29 +101,25 @@ public class GlobalControllerErrorHandler {
 		int statusCode = status.value();
 		String uri = null;
 		String timestamp = ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME);
-		
+
 		if (webRequest instanceof ServletWebRequest swr) {
 			uri = swr.getRequest().getRequestURI();
 		}
-		
+
 		if (logStatus == LogStatus.MESSAGE_ONLY) {
 			log.error("Exception: {}", ex.toString());
-		}
-		else {
+		} else {
 			log.error("Exception: ", ex);
 		}
-		
+
 		ExceptionMessage excMsg = new ExceptionMessage();
 		excMsg.setMessage(message);
 		excMsg.setStatusCode(statusCode);
 		excMsg.setStatusReason(statusReason);
 		excMsg.setTimestamp(timestamp);
 		excMsg.setUri(uri);
-		
+
 		return excMsg;
 	}
-	
-	
-	
 
 }
